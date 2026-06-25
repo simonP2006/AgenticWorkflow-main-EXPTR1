@@ -1,0 +1,38 @@
+.DS_Store
+__pycache__/
+*.pdf
+!coding-resource/*.pdf
+
+# Context Preservation System — session-specific runtime data
+.claude/context-snapshots/
+
+# D-1: Workflow runtime directories (generated during workflow execution)
+verification-logs/
+autopilot-logs/
+pacs-logs/
+translations/*
+!translations/glossary.yaml
+
+# TDD Guard toggle — personal workflow setting (not shared)
+.tdd-guard
+
+# Setup Hook logs — runtime diagnostics (regenerated on each run)
+.claude/hooks/*.log
+
+# ── EXPTR1 local skill-checkpoint (Master Claude, 2026-06-25) ──
+# Keep owner-private financial data and heavy/stale artifacts OUT of git.
+# The skill READS these at runtime; they are NOT skill source.
+raw-data/
+*.xlsx
+*.xls
+# Heavy non-source corpora & generated previews
+research/
+expr-place-preview-WK23/
+audit-0620-store-db/
+# Stale / rolling backups (junk)
+_stale_backup_*/
+_ra_backup/
+_gt_backup_*/
+# Misc runtime logs
+run-logs/
+review-logs/
