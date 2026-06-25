@@ -1,0 +1,31 @@
+# BATCH F — WORKER DIRECTIVE (orchestrator-contract + doc-honesty) — ★LAST, INTEGRATION-CRITICAL — CSO (surface:3) → worker s2
+
+> Master Batch E §5 RATIFY-GO (all A-E passed §5) → Batch F AUTHORIZED on the COPY. You are a WORKER (not master); report to CSO (surface:3). Read also: `_hardening/MASTER_GO_BATCH_F.md` + `ROUND1_FIX_PLAN.md §4 BATCH F`. Constraints below are master-binding. **★This is the FIRST + ONLY edit to orchestrator.py — it wires the 6 hardened sub-skills into one fail-closed end-to-end pipeline. Highest integration risk.**
+
+## 0. BOUNDARIES (inviolable — note the DIFFERENT scope vs prior batches)
+- **MAY edit (COPY only):** (a) `_hardening/skills/expensereceipt/scripts/expensereceipt_orchestrator.py` (the wiring — its md5 WILL change from `5dad9088c0bc61c3b2ac421a171580ce`; **that is EXPECTED**) · (b) `_hardening/skills/expensereceipt-classify/scripts/expensereceipt_classify.py` (★ONLY for C1 --card fail-loud co-land — surgical; current copy md5 `13b58150f667695721a90c051b7fb195`) · (c) the master `expensereceipt/SKILL.md` (DH-1/2/6 doc-honesty).
+- **★MUST NOT change (the 5 other sub COPIES, ratified in A-E):** verify `ca3ab103…` · place `ddc6d1a4…` · db `91e431b9…` · merchant `71cfea253923…` · extract (autodetect.py + expensereceipt_vote.py). Re-assert their md5 UNCHANGED after the batch.
+- **★ALL `.claude/skills/**` ORIGINALS byte-UNTOUCHED** (orchestrator + all 6 subs; promotion gap — nothing merges until the HARD GATE). Capture orchestrator-copy + classify-copy md5 BEFORE editing.
+- Input `raw-data/input/` read-only, manifest `7b70b33745f4` (158) before+after; NO write to input. Det-reduction; non-vacuous orchestrate-level selftests; no git/merge.
+
+## 1. THE FIXES (wiring in orchestrator.py; +classify for C1; +master SKILL.md doc)
+- **V6-WIRING [orch half] (crit):** orchestrator threads `run_dir`/`expected_week` into `run_logical` so verify binds the vote-audit FROM DISK (verify's disk-load half landed in Batch C). selftest: orchestrate → V6 reads vote-audit from disk; wrong-week on disk → ERROR (verdict≠PASS).
+- **DB-1 [orch call] (crit):** orchestrator calls verify → quarantine → promote as ONE code-enforced transaction AFTER run_physical PASS, **promote GATED on verdict==PASS** (db-side gate landed in Batch B; import db's promote_week + pass the real verdict). selftest: verify FAIL/ERROR → NO promote (fail-closed); PASS → promote.
+- **DH-3 (crit):** thread `run.get('sales_slips')` into verify_logical so the **KICC/롯데 매출전표** (card sales-slip alternate-receipt) path is reachable — lets the owner's 매출전표 settle instead of false-V2-FAIL. selftest: sales_slip present → consumed, NOT V2-FAIL.
+- **C1 --card fail-loud co-land (crit):** orchestrator ALWAYS builds+passes `card_pool` into classify; classify enforces --card-mandatory now — **fail-LOUD ESCALATE if card_pool missing (NOT silent-OTHERS, NOT crash).** selftest: missing card → classify fail-loud ESCALATE (not crash, not silent route). ★This is the ONLY classify edit in Batch F.
+- **DR-5 (low):** orchestrator `_dinner_confidence` (G12) uses the shared `norm_store`/`_mkey` key (ws-collapse) so it matches the store-db keying. selftest: double-space store → G12 match.
+- **DH-7 (low):** call `stage_inputs()` at the head of orchestrate (code-enforce copy-first) OR soften the docstring to match reality. Pick one, document.
+- **DH-1/DH-2/DH-6 (DOC honesty, master SKILL.md):** rewrite to ACTUAL behavior — the verify→place→verify gate + emit-once orchestration trace; **DROP** the stage-table / exit-code-routing / "drives 6 sub-skills" overclaims; DROP the stale `_get_name_db_row_range` clause. ★§6-b: ZERO overclaim residue (grep the doc after — I and master both grep).
+- **NOT wired (leave deferred, document as such):** classify/merchant in-process reuse — future round; do NOT over-reach.
+
+## 2. ★CARRY-FORWARD cautions
+- **Batch-D LOW-2 (DORMANT over-dedup):** when wiring `build_placements` into the runtime, ENSURE the runtime supplies stable physical-receipt ids + images so dedup keys on the **ID, NEVER on store|amount**. Do NOT activate the dormant over-dedup path. ★Add a non-vacuous selftest: two DISTINCT same-day same-amount receipts → BOTH placed (not collapsed).
+- **fail-closed everywhere:** the wired end-to-end txn must preserve EVERY fail-closed property from C/B/D — ERROR/unrun-mandatory → verdict≠PASS → NO promote/place; degradation NEVER silently green; ANCHOR#2a intact.
+
+## 3. REQUIRED non-vacuous hardcoded selftests (minimum — each FAIL pre-fix / PASS post-fix, orchestrate-level)
+orchestrate → V6 binds vote-audit from disk + wrong-week → ERROR · verify FAIL/ERROR verdict → orchestrator does NOT promote · KICC sales_slip → consumed (not V2-FAIL) → settles · missing card_pool → classify fail-loud ESCALATE (not crash, not silent-OTHERS) · two distinct same-day same-amount receipts → both placed (over-dedup NOT activated) · master SKILL.md → zero overclaim residue.
+
+## 4. VERIFY + REPORT
+- Run `python3 /tmp/cso_sandbox_baseline.py` → orchestrator selftest green (27 base + new orchestrate cases) + 0 FAIL + cross-importers green + all other modules unchanged. Input PRISTINE (158, `7b70b33745f4`). ALL originals byte-untouched. The 5 non-classify sub COPIES md5 unchanged. (orchestrator-copy + classify-copy md5 CHANGE = expected; report the new md5s.)
+- Report to **CSO surface:3** (plain text, no backticks/$/modal): [1] orchestrator-copy + classify-copy NEW md5 (changed, expected) + the 5 other sub copies md5 UNCHANGED + ALL originals UNCHANGED · [2] functions touched · [3] each fix + selftest FAIL-pre/PASS-post DATA · [4] **★fail-closed end-to-end: verify FAIL → NO promote; wrong-week → ERROR; missing card → fail-loud ESCALATE** · [5] KICC sales_slip settles · [6] two-distinct-same-amount both placed (LOW-2 dormant) · [7] master SKILL.md doc-honesty: grep shows ZERO overclaim residue · [8] no-regression + boundaries + promotion gap. Then HOLD. I (CSO) re-verify (the full fail-closed end-to-end chain + doc-honesty residue grep + the 5-copies-unchanged + all-originals-unchanged) before reporting up. If ambiguous on any fail-closed/integration semantics → STOP + ask surface:3.
+ACK on surface:3, then begin. ★This is the last batch — after it: master's biggest §5 → 10-fresh-prompt gate → owner-approval merge.

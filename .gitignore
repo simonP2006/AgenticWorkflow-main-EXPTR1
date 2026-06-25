@@ -1,38 +1,85 @@
-.DS_Store
-__pycache__/
+# ========================================================================
+# .gitignore - AgenticWorkflow-main-EXPTR1 (expensereceipt skill repo)
+# Goal: commit/push ONLY skill source + docs. Keep ALL owner-private
+#       financial data and heavy/generated artifacts OUT of git.
+# NOTE: comments MUST be on their own lines. A trailing "# ..." on a
+#       pattern line becomes PART OF THE PATTERN and silently breaks it.
+# ========================================================================
+
+# ── 1. OWNER-PRIVATE financial data (NEVER commit) ──
+# raw-data/ = 394MB receipts, card statements, output workbooks
+raw-data/
+
+# Expense workbooks & card statements anywhere (incl. root simon_park_T&E_*.xlsx)
+*.xlsx
+*.xls
+*.xlsm
+
+# Card slips / receipts / scanned PDFs
 *.pdf
-!coding-resource/*.pdf
 
-# Context Preservation System — session-specific runtime data
+# Receipt & annotated-receipt images (incl. crops with real names)
+*.png
+*.jpg
+*.jpeg
+*.heic
+*.webp
+*.gif
+
+# Korean expense-artifact name patterns (backstop)
+*카드승인내역*
+*매출전표*
+*T&E*
+*TnE*
+
+# ── 2. HEAVY non-source corpora & generated previews ──
+# research/ = 113MB OCR-results JSON, names-data, receipt previews
+research/
+# expr-place-preview-WK23/ = 9.7MB placement preview images + xlsx
+expr-place-preview-WK23/
+# audit-0620-store-db/ = store-db audit artifacts (diagram + report)
+audit-0620-store-db/
+# coding-resource/ = 7.9MB theory PDF (not skill source)
+coding-resource/
+
+# ── 3. Runtime state / learned DB (regenerated per run) ──
+# planning/ store-db (learned merchant data), cell-mapping, scaffolds, state.yaml
+planning/**/*.json
+planning/**/*.yaml
 .claude/context-snapshots/
+.claude/hooks/*.log
+.tdd-guard
 
-# D-1: Workflow runtime directories (generated during workflow execution)
+# ── 4. Workflow runtime log dirs (generated during execution) ──
 verification-logs/
 autopilot-logs/
 pacs-logs/
+run-logs/
+review-logs/
 translations/*
 !translations/glossary.yaml
 
-# TDD Guard toggle — personal workflow setting (not shared)
-.tdd-guard
-
-# Setup Hook logs — runtime diagnostics (regenerated on each run)
-.claude/hooks/*.log
-
-# ── EXPTR1 local skill-checkpoint (Master Claude, 2026-06-25) ──
-# Keep owner-private financial data and heavy/stale artifacts OUT of git.
-# The skill READS these at runtime; they are NOT skill source.
-raw-data/
-*.xlsx
-*.xls
-# Heavy non-source corpora & generated previews
-research/
-expr-place-preview-WK23/
-audit-0620-store-db/
-# Stale / rolling backups (junk)
-_stale_backup_*/
+# ── 5. Backups / stale snapshots ──
 _ra_backup/
+_stale_backup_*/
 _gt_backup_*/
-# Misc runtime logs
-run-logs/
-review-logs/
+*.bak
+*.bak-*
+*_ORG.*
+*복사본*
+
+# ── 6. Python ──
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# ── 7. OS / editor cruft ──
+.DS_Store
+**/.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

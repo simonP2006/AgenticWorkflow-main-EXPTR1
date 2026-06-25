@@ -1,0 +1,42 @@
+# WK09 Expense Report Automation — SOT (Single Source of Truth)
+# Writer: Orchestrator only (CLAUDE.md Absolute Criterion 2)
+# Framework: CLAUDE.md + WK_workflow.md + PRD_pre_instructions.md
+
+workflow: WK_workflow.md
+target_week: WK09_2026
+current_step: 8
+total_steps: 8
+workflow_status: completed
+
+autopilot:
+  enabled: true
+  mode: quality_maximization
+  decision_log_dir: autopilot-logs/
+
+outputs:
+  step-1: research/input-manifest.json
+  step-2: research/card-approval-data.json
+  step-3: research/ocr-results.json
+  step-4: raw-data/output/simon_park_T&E_WK09_2026.xlsx
+  step-5: research/annotations/wk09-template.json
+  step-6: research/annotations/wk09.json
+  step-7: raw-data/output/simon_park_T&E_WK09_2026.xlsx
+  step-8: raw-data/output/simon_park_T&E_WK09_2026.xlsx
+
+pacs:
+  current_step_score: 85
+  dimensions: {F: 88, C: 92, L: 85}
+  weak_dimension: L
+  history:
+    step-1: {score: 90, weak: null}
+    step-2: {score: 90, weak: null}
+    step-3: {score: 90, weak: null}
+    step-4: {score: 88, weak: L}
+    step-5-6: {score: 85, weak: F}
+    step-7: {score: 90, weak: null}
+    step-8: {score: 85, weak: L}
+  pre_mortem_flag: null
+
+auto_approved_steps: [1, 2, 3, 4, 5, 6, 7, 8]
+completed_teams: []
+active_team: null
